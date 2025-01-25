@@ -1,7 +1,7 @@
 const Login = () => {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center">
-        <div className="bg-gray-100 p-8 rounded-lg shadow-md w-96 fixed">
+        <div className="bg-gray-100 p-8 rounded-lg shadow-md w-96 fixed font-sans">
           <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">로그인</h2>
           <form className="space-y-4">
             <div className="relative">
@@ -32,6 +32,7 @@ const Login = () => {
           </form>
         </div>
       </div>
+      
     );
    };
    
