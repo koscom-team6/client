@@ -1,9 +1,18 @@
+import Sidebar from '../components/home/Sidebar';
+import Home from '../components/home/HomeComponent';
+
 const HomeView = () => {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <h1 className="text-3xl font-bold text-gray-800">홈 화면입니다!</h1>
+  return (
+    <div className="flex min-h-screen items-start">
+      {/* 좌측 사이드바 */}
+      <Sidebar />
+
+      {/* 우측 메인 화면 */}
+      <div className="flex-grow flex justify-center items-start">
+        <Home />
       </div>
-    );
-  };
-  
-  export default HomeView;
+    </div>
+  );
+};
+
+export default HomeView;
