@@ -1,9 +1,15 @@
-module.exports = {
-  content: ['./src/**/*.{js,jsx,ts,tsx}'],
+export default {
+  content: ["./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
     extend: {
-      colors: {
-        'my-color': '#00FF7F',
+      animation: {
+        card: "moveCard 4s infinite",
+      },
+      keyframes: {
+        moveCard: {
+          "0%, 100%": { transform: "translateX(0)" },
+          "50%": { transform: "translateX(50px)" },
+        },
       },
     },
   },

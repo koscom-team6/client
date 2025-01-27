@@ -1,13 +1,14 @@
 import Sidebar from "./pages/sidebar/Sidebar";
-import Home from "./pages/home/HomeComponent";
+import Home from "./pages/home/Home";
+
 const MainLayout = () => {
   return (
-    <div className="flex min-h-screen items-start">
+    <div className="flex min-h-screen">
       {/* 좌측 사이드바 */}
       <Sidebar />
 
       {/* 우측 메인 화면 */}
-      <div className="flex-grow flex justify-center items-start">
+      <div className="ml-64 flex-1 bg-[#F7F6FB]">
         <Home />
       </div>
     </div>
