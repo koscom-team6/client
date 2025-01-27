@@ -1,7 +1,6 @@
-import Sidebar from '../components/home/Sidebar';
-import Home from '../components/home/HomeComponent';
-
-const HomeView = () => {
+import Sidebar from "./pages/sidebar/Sidebar";
+import Home from "./pages/home/HomeComponent";
+const MainLayout = () => {
   return (
     <div className="flex min-h-screen items-start">
       {/* 좌측 사이드바 */}
@@ -15,4 +14,4 @@ const HomeView = () => {
   );
 };
 
-export default HomeView;
+export default MainLayout;
