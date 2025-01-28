@@ -30,8 +30,8 @@ const SectionOne = () => {
         <p className="text-lg text-gray-600">
           금융스타터를 위한 게이미피케이션 기반 학습 서비스, KINDA
         </p>
-        <button className="mt-7 text-white bg-[#D097FF]">
-          연습문제 풀기
+        <button className="mt-7 text-white" style={{backgroundColor: '#D097FF'}}>
+          <p className="text-white">연습문제 풀기</p>
         </button>
       </div>
 
