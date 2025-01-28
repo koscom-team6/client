@@ -13,7 +13,7 @@ const SectionThree = () => {
       </p>
 
       {/* 이미지 */}
-      <img src={ChatBubble} alt="채팅 말풍선" className="w-60 mt-10" />
+      <img src={ChatBubble} alt="채팅 말풍선" className="w-60 mt-10 ml-35" />
     </div>
   );
 };
