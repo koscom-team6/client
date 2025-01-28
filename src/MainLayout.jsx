@@ -1,5 +1,6 @@
 import Sidebar from "./pages/sidebar/Sidebar";
 import Home from "./pages/home/Home";
+import { Outlet } from "react-router-dom";
 
 const MainLayout = () => {
   return (
@@ -9,7 +10,7 @@ const MainLayout = () => {
 
       {/* 우측 메인 화면 */}
       <div className="ml-64 flex-1 bg-[#F7F6FB]">
-        <Home />
+        <Outlet/>
       </div>
     </div>
   );

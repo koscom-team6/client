@@ -3,7 +3,6 @@ import ChatBubble from "../../assets/homeSection/chatbubble.png";
 const SectionThree = () => {
   return (
     <div className="section flex flex-col items-center justify-center min-h-screen bg-gray-100 text-center px-6">
-      {/* 제목 & 설명 */}
       <h2 className="text-5xl font-bold text-[#3B3B3B] leading-tight">
         주관적인 답변,<br />
         이제는 <span className="text-purple-500">AI</span>가 채점해요
