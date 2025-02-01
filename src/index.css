@@ -1,30 +1,42 @@
 @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css');
 @import 'tailwindcss';
-@plugin "daisyui";
 @layer base {
     :root {
         --font-sans: 'Pretendard', ui-sans-serif, system-ui, sans-serif;
     }
 }
-
-:root {
-    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
-    line-height: 1.5;
-    font-weight: 400;
-
-    color-scheme: light dark;
-    color: rgba(255, 255, 255, 0.87);
-    background-color: #242424;
-
-    font-synthesis: none;
-    text-rendering: optimizeLegibility;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-}
-
-body {
-    margin: 0;
-    display: flex;
-    place-items: center;
-    min-height: 100vh;
+@plugin "daisyui";
+@plugin "daisyui/theme" {
+    name: 'kostarter-theme';
+    default: true;
+    prefersdark: true;
+    color-scheme: 'light';
+    --color-base-100: rgba(255, 255, 255, 1);
+    --color-base-200: rgba(247, 246, 251, 1);
+    --color-base-300: oklch(96% 0.007 247.896);
+    --color-base-content: rgba(59, 59, 59, 1);
+    --color-primary: rgba(208, 151, 255, 1);
+    --color-primary-content: oklch(98% 0.003 247.858);
+    --color-secondary: rgba(217, 217, 217, 1);
+    --color-secondary-content: oklch(98% 0.003 247.858);
+    --color-accent: rgba(174, 76, 255, 1);
+    --color-accent-content: oklch(98% 0.003 247.858);
+    --color-neutral: oklch(37% 0.01 67.558);
+    --color-neutral-content: oklch(92% 0.004 286.32);
+    --color-info: oklch(90% 0.058 230.902);
+    --color-info-content: oklch(55% 0.013 58.071);
+    --color-success: oklch(84% 0.143 164.978);
+    --color-success-content: oklch(55% 0.013 58.071);
+    --color-warning: oklch(82% 0.189 84.429);
+    --color-warning-content: oklch(37% 0.01 67.558);
+    --color-error: oklch(71% 0.194 13.428);
+    --color-error-content: oklch(27% 0.105 12.094);
+    --radius-selector: 1rem;
+    --radius-field: 1rem;
+    --radius-box: 1rem;
+    --size-selector: 0.25rem;
+    --size-field: 0.25rem;
+    --border: 1px;
+    --depth: 1;
+    --noise: 0;
 }
