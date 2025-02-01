@@ -42,8 +42,10 @@ const SidebarLogout = () => {
           </p>
           <button 
             onClick={handleLogin}
-            className="bg-myPink text-white transition duration-300" style={{backgroundColor: '#D097FF'}}>
-            →
+            className="bg-myPink text-white px-4 py-2 rounded-lg text-lg font-bold transition duration-300"
+            style={{ backgroundColor: "#D097FF" }}
+          >
+             →
           </button>
       </div>
     </div>

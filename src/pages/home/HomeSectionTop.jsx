@@ -21,7 +21,7 @@ const SectionOne = () => {
         <div className="flex items-center justify-center mb-4">
           <img src={Logo} alt="Kinda Logo" className="w-17 h-17 rounded-lg mr-2" />
           <h1 className="text-2xl font-bold text-[#3B3B3B]" style={{ fontSize: "57px" }}>
-            Kinda
+            KoStarter
           </h1>
         </div>
         <h2 className="text-3xl font-semibold text-[#3B3B3B] mb-4">
@@ -30,9 +30,11 @@ const SectionOne = () => {
         <p className="text-lg text-gray-600">
           금융스타터를 위한 게이미피케이션 기반 학습 서비스, KINDA
         </p>
-        <button className="mt-7 text-white" style={{backgroundColor: '#D097FF'}}>
-          <p className="text-white">연습문제 풀기</p>
+        <button className="btn text-primary-content w-fit px-6 py-3 rounded-lg shadow-md transition mt-5 border-none" style={{backgroundColor: "#D097FF"}}>
+          연습문제 풀기
         </button>
+
+
       </div>
 
 

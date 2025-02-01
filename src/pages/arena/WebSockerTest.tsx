@@ -40,7 +40,7 @@ const WebSocketTest = () => {
 
             // 매칭 성공 시 처리
             stomp.subscribe("/sub/matching", (message) => {
-                console.log("📩 메시지 수신:", message.body);
+                console.log("메시지 수신:", message.body);
                 const { matchSessionId } = JSON.parse(message.body);
                 setMatchSessionId(matchSessionId);
                 setResponseMessage(message.body);
@@ -86,7 +86,7 @@ const WebSocketTest = () => {
     const disconnectWebSocket = () => {
         if (stompClient) {
             stompClient.disconnect(() => {
-                console.log("❌ WebSocket 연결 해제됨");
+                console.log("WebSocket 연결 해제됨");
                 setStompClient(null);
                 setIsMatching(false);
             });
