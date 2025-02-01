@@ -6,11 +6,11 @@ const SectionTwo = () => {
     <div className="section relative flex justify-between items-center min-h-screen bg-gray-100 px-16 py-24">
 
       <div className="w-1/2 space-y-6">
-        <h2 className="text-5xl font-bold text-[#3B3B3B] leading-tight ml-40">
+        <h2 className="text-5xl font-bold text-[#3B3B3B] leading-tight ml-35">
           혼자 · 같이 문제를 풀며<br />
           <span className="text-purple-500">금융 지식</span>을 확장해요
         </h2>
-        <p className="text-xl text-gray-600 leading-relaxed ml-40">
+        <p className="text-xl text-gray-600 leading-relaxed ml-35">
           혼자, 혹은 같이 금융 문제를 풀면서 부족한 금융 지식을 천천히 쌓아가요.
           금융 지식을 쌓아가다 보면 랭크를 높일 수 있어요.
           KINDA가 당신의 성장을 응원할게요.
@@ -29,7 +29,7 @@ const SectionTwo = () => {
         </div>
       </div>
 
-      <div className="absolute top-[+300px] right-[+400px] flex flex-col items-center">
+      <div className="absolute top-[40vh] right-[20vw] flex flex-col items-center">
         <img src={Coin} alt="코인" className="w-70 relative" />
 
         <img

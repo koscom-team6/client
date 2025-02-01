@@ -1,5 +1,5 @@
 import Logo from "../../assets/Logo.png";
-import "./SectionOne.css"; // CSS 파일 import
+import "./HomeSectionTop.css"; // CSS 파일 import
 const SectionOne = () => {
   const cards = [
     "전자 주식은 오를까, 내릴까?",

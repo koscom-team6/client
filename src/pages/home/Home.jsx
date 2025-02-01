@@ -1,7 +1,7 @@
 import ReactFullPage from "@fullpage/react-fullpage";
-import SectionOne from "./SectionOne";
-import SectionTwo from "./SectionTwo";
-import SectionThree from "./SectionThree";
+import HomeSectionTop from "./HomeSectionTop";
+import HomeSectionMiddle from "./HomeSectionMiddle";
+import HomeSectionBottom from "./HomeSectionBottom";
 
 const Home = () => {
   return (
@@ -9,9 +9,9 @@ const Home = () => {
       scrollingSpeed={700} // 스크롤 속도 (ms 단위)
       render={() => (
         <ReactFullPage.Wrapper>
-          <SectionOne />
-          <SectionTwo />
-          <SectionThree />
+          <HomeSectionTop />
+          <HomeSectionMiddle />
+          <HomeSectionBottom />
         </ReactFullPage.Wrapper>
       )}
     />

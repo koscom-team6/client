@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import useAuthStore from "../../store/authStore";
 import home_empty from "../../assets/sidebar/home_empty.png";
 import codesandbox_empty from "../../assets/sidebar/codesandbox_empty.png";
@@ -8,6 +9,7 @@ import logout_empty from "../../assets/sidebar/logout_empty.png";
 import guest from "../../assets/sidebar/guest.png";
 
 const SidebarLogin = () => {
+  const navigate = useNavigate();
   const { logout } = useAuthStore();
   
   const nickname = "임시 닉네임";
@@ -34,7 +36,7 @@ const SidebarLogin = () => {
       {/* 메뉴 섹션 */}
       <nav className="w-full">
         <ul className="space-y-3">
-          <li className="flex items-center px-4 py-2 hover:bg-gray-100 rounded cursor-pointer">
+          <li className="flex items-center px-4 py-2 hover:bg-gray-100 rounded cursor-pointer" onClick={()=>navigate("/")}>
             <img src={home_empty} alt="홈 아이콘" className="w-4 h-4 rounded-lg mr-2" />
             <span className="text-[#3B3B3B]">홈</span>
           </li>
@@ -42,7 +44,7 @@ const SidebarLogin = () => {
             <img src={archive_empty} alt="연습문제 아이콘" className="w-4 h-4 rounded-lg mr-2" />
             <span className="text-[#999999]">연습문제</span>
           </li>
-          <li className="flex items-center px-4 py-2 hover:bg-gray-100 rounded cursor-pointer">
+          <li className="flex items-center px-4 py-2 hover:bg-gray-100 rounded cursor-pointer" onClick={()=>navigate("/arena")}>
             <img src={codesandbox_empty} alt="아레나 아이콘" className="w-4 h-4 rounded-lg mr-2" />
             <span className="text-[#999999]">아레나</span>
           </li>
