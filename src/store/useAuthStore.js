@@ -11,6 +11,11 @@ const useAuthStore = create(
             tierImageSrc: '',
             profileSrc: '',
             token: '',
+            /**
+             * 로그인 후 auth 세팅
+             * @param {string} email 유저 이메일
+             * @param {string} password 유저 패스워드
+             */
             setAuth: ({ email, password }) => {
                 const user = login(email, password);
 
