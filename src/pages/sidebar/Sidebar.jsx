@@ -15,7 +15,7 @@ const Sidebar = () => {
       <div className="flex items-center mt-[15px]">
         <img src={Logo} alt="Kinda Logo" className="w-10 h-10 rounded-lg mr-2" />
         <h1 className="text-2xl font-bold text-[#3B3B3B]" style={{ fontSize: '37px' }}>
-          Kinda
+          KoStarter
         </h1>
       </div>
 
