@@ -16,10 +16,10 @@ import React from 'react';
 
 const QuizContent = ({ images, content, references }) => {
     return (
-        <div className="mb-10">
+        <div className="mb-10 px-3">
             <QuizImageContainer images={images} />
-            <p className="text-base">{content}</p>
-            <div className="mt-4">
+            <p className="text-base my-8">{content}</p>
+            <div>
                 <h3 className="text-xl font-bold ">참고</h3>
                 <p className="text-sm py-1">아래의 정보를 참고하거나, 직접 검색을 통해 문제를 해결하세요!</p>
                 <ul className="list-disc ml-6">
@@ -43,7 +43,7 @@ const QuizContent = ({ images, content, references }) => {
 
 const QuizImageContainer = ({ images }) => {
     return (
-        <div className="flex gap-4 my-8">
+        <div className="flex gap-4">
             {images ? images.map((image, i) => <QuizImage key={i} image={image} />) : <></>}
         </div>
     );
