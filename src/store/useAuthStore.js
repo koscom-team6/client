@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { login } from '../libs/apis/authApi';
+import { getCurrentTierImageSrc } from '../libs/tier/tierHelper';
 
 const useAuthStore = create(
     persist(
@@ -39,13 +40,5 @@ const useAuthStore = create(
         { name: 'auth' }
     )
 );
-
-const getCurrentTierImageSrc = (score) => {
-    let tier = Math.trunc(score / 100);
-    if (tier > 31) tier = 31;
-    else if (tier < 0) tier = 0;
-
-    return `/tiers/${tier}.svg`;
-};
 
 export default useAuthStore;
