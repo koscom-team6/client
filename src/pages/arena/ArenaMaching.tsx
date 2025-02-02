@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import SockJS from "sockjs-client";
-import Stomp from "stompjs";
+import SockJS from "sockjs-client"; // WebSocket 기반 통신용 SockJS
+import Stomp from "stompjs"; // WebSocket 통신을 위한 Stomp 프로토콜
 import { matchingTest } from "../../libs/apis/matchingApi";
 import Trophy from "../../assets/arena/Trophy.png";
 
-const WebSocketTest = () => {
+const ArenaMatching = () => {
     const navigate = useNavigate();
     
     const [stompClient, setStompClient] = useState(null);
@@ -18,6 +18,12 @@ const WebSocketTest = () => {
     const [matchSessionId, setMatchSessionId] = useState(null);
 
     // 매칭 요청 버튼 클릭 시 WebSocket 연결 시작
+    /* Flow
+     1. 웹소켓 연결 시도
+     2. 웹소켓 연결 성공시 Server로 Post 요청
+     3. Post 요청의 반환값인 UUID를 활용하여 대결 컴포넌트로 이동
+    */
+
     const handleStartMatching = () => {
         if (isMatching) {
             cancelMatching();
@@ -37,13 +43,16 @@ const WebSocketTest = () => {
             setIsMatching(true);
 
             handlePostRequest(); // WebSocket 연결 성공 후 POST 요청 실행
-
+            // Post 요청이 성공하면 WebSocket Message를 통해 대결 페이지로 넘어갈 때 사용되는 UUID를 매칭된 2명에게 주는 것임
+            
             // 매칭 성공 시 처리
             stomp.subscribe("/sub/matching", (message) => {
                 console.log("메시지 수신:", message.body);
+                 // 서버로 Post 요청을 보내고 정상 매칭 성공시 Topic을 구독한 2명에게 UUID를 반환함
                 const { matchSessionId } = JSON.parse(message.body);
                 setMatchSessionId(matchSessionId);
                 setResponseMessage(message.body);
+                // 반환한 UUID를 통해 다음 페이지로 navigate
                 handleMatchingSuccess();
             });
         }, (error) => {
@@ -53,7 +62,7 @@ const WebSocketTest = () => {
 
     // 매칭 요청 (WebSocket 연결 후 실행됨)
     const handlePostRequest = async () => {
-        const randomId = Math.floor(Math.random() * 100) + 1;
+        const randomId = Math.floor(Math.random() * 100) + 1;  // 현재 DB 연결이 안되어있어 playerID를 랜덤 값으로 지정 ( Redis Key 값은 유일값이어야 해서 )
         try {
             const response = await matchingTest(randomId);
             console.log("POST 응답:", response);
@@ -78,6 +87,7 @@ const WebSocketTest = () => {
                 clearInterval(countdownInterval);
                 disconnectWebSocket(); // 웹소켓 연결 해제
                 navigate(`/next-page/${matchSessionId}`); // UUID와 함께 다음 페이지로 이동
+                // 이 부분을 대결 컴포넌트로 바꿔야함
             }
         }, 1000);
     };
@@ -150,4 +160,4 @@ const WebSocketTest = () => {
     );
 };
 
-export default WebSocketTest;
+export default ArenaMatching;
