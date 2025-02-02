@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React from 'react';
 import { CountdownCircleTimer } from 'react-countdown-circle-timer';
 
 /**
@@ -9,28 +9,31 @@ import { CountdownCircleTimer } from 'react-countdown-circle-timer';
  */
 const QuizHeader = ({ title, tags, count }) => {
     return (
-        <div className="sticky top-0 bg-base-200  pt-8">
-            <div className="flex justify-between">
-                <div>
-                    <h1 className="text-3xl font-bold pb-1">{title}</h1>
-                    {tags.map((e, i) => (
-                        <span key={i} className="text-sm text-gray-500">{`#${e} `}</span>
-                    ))}
+        <div className="sticky top-0 z-99">
+            <div className=" bg-base-200 pt-8">
+                <div className="flex justify-between">
+                    <div>
+                        <h1 className="text-3xl font-bold pb-1">{title}</h1>
+                        {tags.map((e, i) => (
+                            <span key={i} className="text-sm text-gray-500">{`#${e} `}</span>
+                        ))}
+                    </div>
+                    <div className="timer-wrapper">
+                        <CountdownCircleTimer
+                            isPlaying
+                            duration={count}
+                            size={60}
+                            strokeWidth={8}
+                            colors={['#D097FF', '#FCB700', '#FF637D', '#FF637D']}
+                            colorsTime={[10, 5, 2, 0]}
+                        >
+                            {({ remainingTime }) => <p className="text-lg">{remainingTime}</p>}
+                        </CountdownCircleTimer>
+                    </div>
                 </div>
-                <div className="timer-wrapper">
-                    <CountdownCircleTimer
-                        isPlaying
-                        duration={count}
-                        size={60}
-                        strokeWidth={8}
-                        colors={['#D097FF', '#FCB700', '#FF637D', '#FF637D']}
-                        colorsTime={[10, 5, 2, 0]}
-                    >
-                        {({ remainingTime }) => <p className="text-lg">{remainingTime}</p>}
-                    </CountdownCircleTimer>
-                </div>
+                <hr className="mt-4 border-gray-300" />
             </div>
-            <hr className="mt-4 border-gray-300" />
+            <div className="h-6 bg-linear-to-b from-base-200 from-1% via-base-200/30 via-80% to-base-200/0 to-100%"></div>
         </div>
     );
 };

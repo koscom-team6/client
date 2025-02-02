@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import QuizHeader from '../../components/quiz/QuizHeader';
 import QuizContent from '../../components/quiz/QuizContent';
 import AnswerInput from '../../components/quiz/AnswerInput';
 import QuizAvartar from '../../components/quiz/QuizAvartar';
+import AIGrading from '../../components/quiz/AiGranding';
+import ArenaResult from '../../components/quiz/ArenaResult';
 
 const ArenaMain = () => {
     const tags = ['국내주식', '투자'];
@@ -37,12 +39,48 @@ const ArenaMain = () => {
         },
     ];
 
+    const contentRef = useRef(null);
+    const scrollToBottom = () => {
+        contentRef.current?.scrollIntoView({ block: 'end', behavior: 'smooth' });
+    };
+
+    // 스크롤 이벤트 처리
+    const [isStart, setIsStart] = useState(false);
+    useEffect(() => {
+        if (isStart) scrollToBottom();
+    }, [isStart]);
+
+    // 테스트
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setIsStart(true);
+        }, 5000); // 1초(1000ms) 후에 isVisible을 true로 변경
+
+        return () => clearTimeout(timer); // 컴포넌트가 언마운트되면 타이머 정리
+    }, []);
+
     return (
-        <div className="px-[8rem]">
+        <div className="px-[8rem]" ref={contentRef}>
             <QuizHeader title={'삼성 전자의 전망을 평가해라!'} tags={tags} count={180} />
             <QuizContent content={content} images={images} references={references} />
-            <QuizAvartar />
-            <div className="text-center h-200">스크롤 테스트</div>
+            {isStart ? <div className="text-center h-200">스크롤 테스트</div> : <></>}
+            <div className="flex justify-end">
+                <QuizAvartar nickname={'닉네임가제'} score={200} action="solved" />
+            </div>
+            <div className="flex justify-end">
+                <QuizAvartar nickname={'닉네임가제'} score={200} action="solved" isMe />
+            </div>
+            <AIGrading action="complete" />
+
+            {/* 결과창 버튼 (임시) */}
+            <button className="btn" onClick={() => document.getElementById('arena_result').showModal()}>
+                {' '}
+                결과창 버튼
+            </button>
+            <ArenaResult />
+            {/* 답변 영역 */}
+            <div className="h-76 margin"></div>
+            <div className="flex justify-center items-center bg-linear-to-t from-base-200 from-70% via-base-200/30 via-90% to-base-200/0 to-0% fixed bottom-0 w-full h-76"></div>
             <div className="flex justify-center items-center">
                 <AnswerInput />
             </div>
