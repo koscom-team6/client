@@ -3,7 +3,7 @@ import QuizHeader from '../../components/quiz/QuizHeader';
 import QuizContent from '../../components/quiz/QuizContent';
 import AnswerInput from '../../components/quiz/AnswerInput';
 import QuizAvartar from '../../components/quiz/QuizAvartar';
-import AIGrading from '../../components/quiz/AiGranding';
+import AIGrading from '../../components/quiz/AIGrading';
 import ArenaResult from '../../components/quiz/ArenaResult';
 
 const ArenaMain = () => {
