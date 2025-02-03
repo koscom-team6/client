@@ -7,6 +7,7 @@ import ArenaMain from './pages/arena/ArenaMain';
 import useAuthStore from './store/useAuthStore';
 import { useShallow } from 'zustand/shallow';
 import PrivateRoute from './PrivateRoute';
+import RankingMain from './pages/ranking/RankingMain';
 
 const App = () => {
     const { isAuthenticated } = useAuthStore(
