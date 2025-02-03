@@ -1,11 +1,16 @@
-import useAuthStore from '../../store/authStore';
+import useAuthStore from '../../store/useAuthStore';
 import SidebarLogin from './SidebarLogin';
 import SidebarLogout from './SidebarLogout';
 import { ReactComponent as Logo } from '../../assets/Logo.svg';
 import { ReactComponent as KoStarter } from '../../assets/KoStarter.svg';
+import { useShallow } from 'zustand/shallow';
 
 const Sidebar = () => {
-    const { isLogin } = useAuthStore();
+    const { isAuthenticated } = useAuthStore(
+        useShallow((state) => ({
+            isAuthenticated: state.isAuthenticated,
+        }))
+    );
 
     return (
         <div
@@ -18,7 +23,7 @@ const Sidebar = () => {
                 <KoStarter className="w-30" />
             </a>
 
-            {isLogin ? <SidebarLogin /> : <SidebarLogout />}
+            {isAuthenticated ? <SidebarLogin /> : <SidebarLogout />}
         </div>
     );
 };

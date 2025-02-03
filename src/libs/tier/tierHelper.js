@@ -5,3 +5,9 @@ export const getCurrentTierImageSrc = (score) => {
 
     return `/tiers/${tier}.svg`;
 };
+
+export const getNextTierRestScore = (score) => {
+    let tier = Math.trunc(score / 100);
+
+    return 100 - (score - tier * 100);
+};

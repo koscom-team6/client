@@ -1,18 +1,24 @@
 import { useState } from 'react';
-import useAuthStore from '../../store/authStore';
 import { IoArrowForward } from 'react-icons/io5';
+import { useShallow } from 'zustand/shallow';
+import useAuthStore from '../../store/useAuthStore';
 
 const SidebarLogout = () => {
-    const { login } = useAuthStore();
+    const { isAuthenticated, setAuth } = useAuthStore(
+        useShallow((state) => ({
+            isAuthenticated: state.isAuthenticated,
+            setAuth: state.setAuth,
+        }))
+    );
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
-    const handleLogin = () => {
-        if (username === 'koscom@koscom.com' && password === 'koscom') {
-            alert('로그인 성공');
-            login();
-        } else {
-            alert('아이디와 비밀번호를 확인해주세요.');
+    const handleLogin = async () => {
+        try {
+            await setAuth({ username: username, password: password });
+        } catch (error) {
+            console.log(error);
+            alert('아이디나 비밀번호를 다시 확인해주세요');
         }
     };
 
