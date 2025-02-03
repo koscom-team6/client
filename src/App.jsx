@@ -40,7 +40,14 @@ const App = () => {
                         }
                     />
                     ,
-                    <Route path="ranking" element={<RankingMain />} />
+                    <Route
+                        path="ranking"
+                        element={
+                            <PrivateRoute>
+                                <RankingMain />
+                            </PrivateRoute>
+                        }
+                    />
                 </Route>
 
                 {/* 로그인 페이지는 별도로 라우팅 */}
