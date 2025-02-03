@@ -2,11 +2,20 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import SockJS from 'sockjs-client'; // WebSocket 기반 통신용 SockJS
 import Stomp from 'stompjs'; // WebSocket 통신을 위한 Stomp 프로토콜
-import { matchingTest } from '../../libs/apis/matchingApi';
+import { matchingStart } from '../../libs/apis/matchingApi';
 import Trophy from '../../assets/arena/Trophy.png';
+import useAuthStore from '../../store/useAuthStore';
+import { useShallow } from 'zustand/shallow';
 
 const ArenaMatching = () => {
     const navigate = useNavigate();
+    const { token } = useAuthStore(
+        useShallow((state) => ({
+            token: state.token,
+        }))
+    );
+
+    console.log(token, '내 토큰..');
 
     const [stompClient, setStompClient] = useState(null);
     const [isMatching, setIsMatching] = useState(false);
@@ -33,7 +42,7 @@ const ArenaMatching = () => {
 
     // WebSocket 연결 함수
     const connectWebSocket = () => {
-        const socket = new SockJS('http://localhost:8080/ws-match');
+        const socket = new SockJS(import.meta.env.VITE_WS_MATCH_HOST);
         const stomp = Stomp.over(socket);
 
         stomp.connect(
@@ -64,9 +73,8 @@ const ArenaMatching = () => {
 
     // 매칭 요청 (WebSocket 연결 후 실행됨)
     const handlePostRequest = async () => {
-        const randomId = Math.floor(Math.random() * 100) + 1; // 현재 DB 연결이 안되어있어 playerID를 랜덤 값으로 지정 ( Redis Key 값은 유일값이어야 해서 )
         try {
-            const response = await matchingTest(randomId);
+            const response = await matchingStart(token);
             console.log('POST 응답:', response);
             startTimer(); // 타이머 시작
         } catch (error) {

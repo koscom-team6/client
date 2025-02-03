@@ -1,8 +1,10 @@
 import './HomeSectionTop.css'; // CSS 파일 import
 import { ReactComponent as Logo } from '../../assets/Logo.svg';
 import { ReactComponent as KoStarter } from '../../assets/KoStarter.svg';
+import { useNavigate } from 'react-router-dom';
 
 const SectionOne = () => {
+    const navigate = useNavigate();
     const cards = [
         '전자 주식은 오를까, 내릴까?',
         '전세 사기를 예방하는 방법은?',
@@ -31,8 +33,9 @@ const SectionOne = () => {
                 <button
                     className="btn text-primary-content w-fit px-6 py-3 rounded-lg shadow-md transition mt-5 border-none"
                     style={{ backgroundColor: '#D097FF' }}
+                    onClick={() => navigate('/arena')}
                 >
-                    연습문제 풀기
+                    아레나 참여하기
                 </button>
             </div>
 

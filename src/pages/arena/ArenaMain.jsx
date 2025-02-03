@@ -5,8 +5,25 @@ import AnswerInput from '../../components/quiz/AnswerInput';
 import QuizAvartar from '../../components/quiz/QuizAvartar';
 import AIGrading from '../../components/quiz/AIGrading';
 import ArenaResult from '../../components/quiz/ArenaResult';
+import { useParams } from 'react-router-dom';
+import { getArenaQuiz, sendMessageApi } from '../../libs/apis/arenaApi';
+import SockJS from 'sockjs-client'; // WebSocket 기반 통신용 SockJS
+import Stomp from 'stompjs'; // WebSocket 통신을 위한 Stomp 프로토콜
+import useAuthStore from '../../store/useAuthStore';
+import { useShallow } from 'zustand/shallow';
 
 const ArenaMain = () => {
+    const { sid } = useParams();
+    const { quiz, setQuiz } = useState(null);
+    const { token, nickname, updateUser } = useAuthStore(
+        useShallow((state) => ({
+            token: state.token,
+            nickname: state.nickname,
+            updateUser: state.updateUser,
+        }))
+    );
+
+    const title = '삼성 전자의 전망을 평가해라!';
     const tags = ['국내주식', '투자'];
     const images = [
         'https://webchart.thinkpool.com/2022Mobile/Stock1Day/A005930.png',
@@ -39,50 +56,178 @@ const ArenaMain = () => {
         },
     ];
 
+    // 웹소켓
+    const stompClient = useRef(null);
+    const [subchat, setSubChat] = useState(null);
+
+    const connect = () => {
+        const socket = new SockJS(import.meta.env.VITE_WS_ARENA_HOST);
+        stompClient.current = Stomp.over(socket);
+        stompClient.current.connect({}, () => {
+            stompClient.current.subscribe(`/sub/arena`, (message) => {
+                const subMessage = JSON.parse(message.body);
+                setSubChat(subMessage);
+                console.log('서브 메시지: ', subMessage);
+            });
+        });
+    };
+
+    const [typingMessage, setTypingMessage] = useState(null);
+    const [isTyping, setIsTyping] = useState(false);
+
+    useEffect(() => {
+        if (isTyping) sendMessage('typing', sid);
+    }, [isTyping]);
+
+    const sendMessage = async (action, sid) => {
+        if (stompClient.current) {
+            console.log('하이하이 소켓 센드해용');
+            const message = {
+                matchSessionId: sid,
+                type: action, // typing, solved
+                content: typingMessage,
+                token: token,
+            };
+
+            await sendMessageApi(message);
+        }
+    };
+
+    const disconnect = () => {
+        if (stompClient.current) {
+            console.log('Arena 세션 종료');
+            stompClient.current.disconnect();
+        }
+    };
+
+    useEffect(() => {
+        connect();
+    }, []);
+
+    const [my, setMy] = useState({
+        type: null,
+        result: null,
+        content: null,
+        num: null,
+        user: null,
+    });
+    const [oppositeUser, setOppositeUser] = useState({
+        type: null,
+        nickname: null,
+        score: null,
+        content: null,
+        profile: null,
+        result: null,
+        num: null,
+    });
+
     const contentRef = useRef(null);
     const scrollToBottom = () => {
         contentRef.current?.scrollIntoView({ block: 'end', behavior: 'smooth' });
     };
 
-    // 스크롤 이벤트 처리
-    const [isStart, setIsStart] = useState(false);
+    // null, inProgress, complete
+    const [aiStatus, setAiStaus] = useState(null);
+
     useEffect(() => {
-        if (isStart) scrollToBottom();
-    }, [isStart]);
+        if (subchat) {
+            const typing_arr = subchat.type.split(' ');
+            const chat_type = typing_arr[0];
+            const chat_target = typing_arr[1];
 
-    // 테스트
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            setIsStart(true);
-        }, 5000); // 1초(1000ms) 후에 isVisible을 true로 변경
+            if (chat_target === nickname) {
+                setMy({
+                    type: chat_type,
+                    result: subchat.user1.nickname === chat_target ? subchat.result1 : subchat.result2,
+                    content: subchat.user1.nickname === chat_target ? subchat.content1 : subchat.content2,
+                    num: subchat.user1.nickname === chat_target ? 1 : 2,
+                    user: subchat.user1.nickname === chat_target ? subchat.user1 : subchat.user2,
+                });
+            } else {
+                setOppositeUser({
+                    type: chat_type,
+                    nickname: chat_target,
+                    score: subchat.user1.nickname === chat_target ? subchat.user1.score : subchat.user2.score,
+                    content: subchat.user1.nickname === chat_target ? subchat.content1 : subchat.content2,
+                    profile: subchat.user1.nickname === chat_target ? subchat.user1.image : subchat.user2.image,
+                    result: subchat.user1.nickname === chat_target ? subchat.result1 : subchat.result2,
+                    num: subchat.user1.nickname === chat_target ? 1 : 2,
+                });
+            }
 
-        return () => clearTimeout(timer); // 컴포넌트가 언마운트되면 타이머 정리
-    }, []);
+            if (subchat.solved1 && subchat.solved2) {
+                if (subchat.user1.nickname === nickname) {
+                    setMy({ ...my, result: subchat.result1, user: subchat.user1 });
+                    setOppositeUser({ ...oppositeUser, result: subchat.result2 });
+                } else {
+                    setMy({ ...my, result: subchat.result2, user: subchat.user2 });
+                    setOppositeUser({ ...oppositeUser, result: subchat.result1 });
+                }
+            }
 
+            if (subchat.solved1 === true && subchat.solved1 === subchat.solved2) {
+                updateUser();
+                setAiStaus('complete');
+            }
+
+            scrollToBottom();
+        }
+    }, [subchat]);
     return (
         <div className="px-[8rem]" ref={contentRef}>
-            <QuizHeader title={'삼성 전자의 전망을 평가해라!'} tags={tags} count={180} />
+            <QuizHeader title={title} tags={tags} count={180} />
             <QuizContent content={content} images={images} references={references} />
-            {isStart ? <div className="text-center h-200">스크롤 테스트</div> : <></>}
+            {oppositeUser.type ? (
+                <div className="flex justify-end">
+                    <QuizAvartar
+                        nickname={oppositeUser.nickname}
+                        score={oppositeUser.score}
+                        action={oppositeUser.type}
+                        profileSrc={oppositeUser.profile}
+                    />
+                </div>
+            ) : (
+                <></>
+            )}
             <div className="flex justify-end">
-                <QuizAvartar nickname={'닉네임가제'} score={200} action="solved" />
+                <QuizAvartar score={200} action={my.type} isMe />
             </div>
-            <div className="flex justify-end">
-                <QuizAvartar nickname={'닉네임가제'} score={200} action="solved" isMe />
-            </div>
-            <AIGrading action="complete" />
-
-            {/* 결과창 버튼 (임시) */}
-            <button className="btn" onClick={() => document.getElementById('arena_result').showModal()}>
-                {' '}
-                결과창 버튼
-            </button>
-            <ArenaResult />
+            <AIGrading action={aiStatus} />
+            {aiStatus === 'complete' ? (
+                <button
+                    className="btn btn-primary"
+                    onClick={(e) => {
+                        e.preventDefault();
+                        console.log('결과창 확인', my.result, oppositeUser.result);
+                        document.getElementById('arena_result').showModal();
+                    }}
+                >
+                    결과창 버튼
+                </button>
+            ) : (
+                <></>
+            )}
+            <ArenaResult
+                title={title}
+                opponentProfile={oppositeUser.profile}
+                myResult={my.result}
+                opponentResult={oppositeUser.result}
+                myUser={my.user}
+                disconnect={disconnect}
+            />
             {/* 답변 영역 */}
             <div className="h-76 margin"></div>
             <div className="flex justify-center items-center bg-linear-to-t from-base-200 from-70% via-base-200/30 via-90% to-base-200/0 to-0% fixed bottom-0 w-full h-76"></div>
             <div className="flex justify-center items-center">
-                <AnswerInput />
+                <AnswerInput
+                    setMessage={setTypingMessage}
+                    sendMessage={sendMessage}
+                    setIsTyping={setIsTyping}
+                    sid={sid}
+                    oppositeComplete={oppositeUser.type}
+                    setAiStatus={setAiStaus}
+                    setMy={setMy}
+                />
             </div>
         </div>
     );

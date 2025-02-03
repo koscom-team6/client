@@ -8,6 +8,7 @@ import RankingMain from './pages/ranking/RankingMain';
 import useAuthStore from './store/useAuthStore';
 import { useShallow } from 'zustand/shallow';
 import PrivateRoute from './PrivateRoute';
+import ArenaResultPopup from './pages/arena/ArenaResultPopup';
 
 const App = () => {
     const { isAuthenticated } = useAuthStore(
@@ -19,6 +20,7 @@ const App = () => {
     return (
         <Router>
             <Routes>
+                <Route path="/arena-result" element={<ArenaResultPopup />} />
                 {/* MainLayout을 기반으로 Outlet 사용 */}
                 <Route path="/" element={<MainLayout />}>
                     <Route index element={<Home />} />
@@ -32,7 +34,7 @@ const App = () => {
                     />
                     ,
                     <Route
-                        path="arena/:arenaId"
+                        path="arena/:sid"
                         element={
                             <PrivateRoute>
                                 <ArenaMain />

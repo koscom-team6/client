@@ -1,5 +1,9 @@
 import Coin from '../../assets/homeSection/coin.png';
 import Rocket from '../../assets/homeSection/rocket.png';
+import { TbArrowUp } from 'react-icons/tb';
+import { ReactComponent as Sandbox } from '../../assets/homeSection/sandbox.svg';
+import { ReactComponent as Archive } from '../../assets/homeSection/archive.svg';
+import { ReactComponent as BarChart } from '../../assets/homeSection/bar-chart.svg';
 
 const SectionTwo = () => {
     return (
@@ -15,16 +19,46 @@ const SectionTwo = () => {
                     랭크를 높일 수 있어요. KoStarter가 당신의 성장을 응원할게요.
                 </p>
 
-                <div className="mt-[50px] space-y-4 ml-40">
-                    <button className="flex items-center space-x-3 text-gray-900 hover:text-purple-500 text-lg">
-                        <span>📖</span> <span className="underline">연습 문제 풀기 &gt;</span>
-                    </button>
-                    <button className="flex items-center space-x-3 text-gray-900 hover:text-purple-500 text-lg">
-                        <span>🏆</span> <span className="underline">아레나 입장하기 &gt;</span>
-                    </button>
-                    <button className="flex items-center space-x-3 text-gray-900 hover:text-purple-500 text-lg">
-                        <span>📊</span> <span className="underline">랭크 확인하기 &gt;</span>
-                    </button>
+                <div className="mt-32 space-y-8 ml-36">
+                    <div className="flex gap-4 items-center">
+                        <Archive className="w-10" />
+                        <div className="flex flex-col">
+                            <div
+                                onClick={() => {
+                                    alert('아직 오픈되지 않은 기능입니다');
+                                }}
+                            >
+                                {'연습 문제 풀기 >'}
+                            </div>
+                            <div className="text-sm text-neutral/50">혼자서 연습 문제를 풀어보세요</div>
+                        </div>
+                    </div>
+                    <div className="flex gap-4 items-center">
+                        <Sandbox className="w-10" />
+                        <div className="flex flex-col">
+                            <div
+                                onClick={() => {
+                                    alert('아직 오픈되지 않은 기능입니다');
+                                }}
+                            >
+                                {'아레나 입장하기 >'}
+                            </div>
+                            <div className="text-sm text-neutral/50">둘이 대결하여 문제를 풀어보세요</div>
+                        </div>
+                    </div>
+                    <div className="flex gap-4 items-center">
+                        <BarChart className="w-10" />
+                        <div className="flex flex-col">
+                            <div
+                                onClick={() => {
+                                    alert('아직 오픈되지 않은 기능입니다');
+                                }}
+                            >
+                                {'랭크 확인하기 >'}
+                            </div>
+                            <div className="text-sm text-neutral/50">내가 얼마나 성장했는지 확인해봐요</div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -35,10 +69,25 @@ const SectionTwo = () => {
 
                 <div
                     className="absolute top-[calc(100%+50px)] bg-white p-5 rounded-xl shadow-md flex items-center space-x-3 
-                w-[400px] h-[80px] right-[-200px]"
+                w-100 h-[80px] right-[-200px]"
                 >
-                    <p className="text-gray-700 text-lg">KoStarter가 내 금융 사고를 넓혀줄 수 있을까?</p>
-                    <span className="text-purple-500 text-xl">⬆</span>
+                    <p className="text-gray-700 ">KoStarter가 내 금융 사고를 넓혀줄 수 있을까?</p>
+                    <button
+                        className="btn btn-primary btn-circle"
+                        onClick={() => {
+                            if (!disabled) {
+                                setDisabled(true);
+                                sendMessage('solved', sid);
+
+                                if (oppositeComplete === 'solved') {
+                                    setAiStatus('inProgress');
+                                    setMy({ type: 'solved' });
+                                }
+                            }
+                        }}
+                    >
+                        <TbArrowUp color="white" size="2rem" />
+                    </button>
                 </div>
             </div>
         </div>
