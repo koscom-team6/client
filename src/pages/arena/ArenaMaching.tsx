@@ -49,9 +49,12 @@ const ArenaMatching = () => {
             stomp.subscribe("/sub/matching", (message) => {
                 console.log("메시지 수신:", message.body);
                  // 서버로 Post 요청을 보내고 정상 매칭 성공시 Topic을 구독한 2명에게 UUID를 반환함
-                const { matchSessionId } = JSON.parse(message.body);
+                const tmpObject = JSON.parse(message.body);
+                console.log("object = ",tmpObject);
+                console.log("sessionId = ", tmpObject.matchSessionId);
+                 const { matchSessionId } = JSON.parse(message.body);
+                console.log("matchSessionId = ",matchSessionId);
                 setMatchSessionId(matchSessionId);
-                setResponseMessage(message.body);
                 // 반환한 UUID를 통해 다음 페이지로 navigate
                 handleMatchingSuccess();
             });
@@ -86,6 +89,7 @@ const ArenaMatching = () => {
             if (count < 0) {
                 clearInterval(countdownInterval);
                 disconnectWebSocket(); // 웹소켓 연결 해제
+                console.log("before navigate match session Id = ");
                 navigate(`/next-page/${matchSessionId}`); // UUID와 함께 다음 페이지로 이동
                 // 이 부분을 대결 컴포넌트로 바꿔야함
             }

@@ -4,10 +4,10 @@ import Login from './pages/home/Login';
 import Home from './pages/home/Home';
 import ArenaMatching from './pages/arena/ArenaMaching';
 import ArenaMain from './pages/arena/ArenaMain';
+import RankingMain from './pages/ranking/RankingMain';
 import useAuthStore from './store/useAuthStore';
 import { useShallow } from 'zustand/shallow';
 import PrivateRoute from './PrivateRoute';
-import RankingMain from './pages/ranking/RankingMain';
 
 const App = () => {
     const { isAuthenticated } = useAuthStore(
@@ -39,7 +39,6 @@ const App = () => {
                             </PrivateRoute>
                         }
                     />
-                    ,
                 </Route>
 
                 {/* 로그인 페이지는 별도로 라우팅 */}
