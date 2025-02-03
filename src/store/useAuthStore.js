@@ -24,7 +24,7 @@ const useAuthStore = create(
                 set({
                     nickname: user.nickname,
                     score: user.score,
-                    token: user.token,
+                    token: token,
                     isAuthenticated: true,
                     tierImageSrc: getCurrentTierImageSrc(user.score),
                     profileSrc: user.image,
@@ -32,6 +32,16 @@ const useAuthStore = create(
             },
             setLogout: () =>
                 set({ nickname: '', score: 0, token: '', isAuthenticated: false, tierImageSrc: '', profileSrc: '' }),
+            updateUser: async () => {
+                const user = await getAuthInfo(get().token);
+                set({
+                    nickname: user.nickname,
+                    score: user.score,
+                    isAuthenticated: true,
+                    tierImageSrc: getCurrentTierImageSrc(user.score),
+                    profileSrc: user.image,
+                });
+            },
             addScore: (score) =>
                 set({
                     score: get().score + score,

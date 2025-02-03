@@ -91,7 +91,7 @@ const RankingMain = () => {
                                     <td className="px-4 py-2 w-[10%]">{user.score}</td>
                                     <td className="px-4 py-2 w-[10%]">{user.solvedCount}</td>
                                     <td className="px-4 py-2 w-[10%]">{user.winningCount}</td>
-                                    <td className="px-4 py-2 w-[10%]">{user.totalCount - user.winningCount}</td>
+                                    <td className="px-4 py-2 w-[10%]">{user.solvedCount - user.winningCount}</td>
                                 </tr>
                             ))
                         ) : (

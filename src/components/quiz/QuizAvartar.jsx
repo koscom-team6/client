@@ -1,5 +1,7 @@
 import { getCurrentTierImageSrc } from '../../libs/tier/tierHelper';
 import { FiCheck } from 'react-icons/fi';
+import useAuthStore from '../../store/useAuthStore';
+import { useShallow } from 'zustand/shallow';
 
 /**
  * 채팅창에서의 유저 컴포넌트
@@ -11,6 +13,13 @@ import { FiCheck } from 'react-icons/fi';
  */
 
 const QuizAvartar = ({ nickname, score, profileSrc, action, isMe }) => {
+    const { myImage, myScore } = useAuthStore(
+        useShallow((state) => ({
+            myImage: state.profileSrc,
+            myScore: state.score,
+        }))
+    );
+
     // 유저의 액션에 따라서 컴포넌트 변경
     const avatarDoAction = (action, isMe) => {
         if (action === 'typing') {
@@ -42,16 +51,26 @@ const QuizAvartar = ({ nickname, score, profileSrc, action, isMe }) => {
                 {avatarDoAction(action, isMe)}
                 <div className="avatar relative">
                     <span className="w-5 absolute right-0">
-                        <img src={getCurrentTierImageSrc(score)} />
+                        <img src={getCurrentTierImageSrc(isMe ? myScore : score)} />
                     </span>
                     <div className="w-20 rounded-full">
-                        <img
-                            src={
-                                profileSrc
-                                    ? profileSrc
-                                    : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'
-                            }
-                        />
+                        {isMe ? (
+                            <img
+                                src={
+                                    myImage
+                                        ? myImage
+                                        : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'
+                                }
+                            />
+                        ) : (
+                            <img
+                                src={
+                                    profileSrc
+                                        ? profileSrc
+                                        : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'
+                                }
+                            />
+                        )}
                     </div>
                 </div>
             </div>
