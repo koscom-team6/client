@@ -32,7 +32,7 @@ const App = () => {
                     />
                     ,
                     <Route
-                        path="arena-test"
+                        path="arena/:arenaId"
                         element={
                             <PrivateRoute>
                                 <ArenaMain />
