@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import SockJS from 'sockjs-client'; // WebSocket 기반 통신용 SockJS
 import Stomp from 'stompjs'; // WebSocket 통신을 위한 Stomp 프로토콜
@@ -9,7 +9,6 @@ const ArenaMatching = () => {
     const navigate = useNavigate();
 
     const [stompClient, setStompClient] = useState(null);
-    const [responseMessage, setResponseMessage] = useState(null);
     const [isMatching, setIsMatching] = useState(false);
     const [timer, setTimer] = useState(0);
     const [intervalId, setIntervalId] = useState(null);
@@ -53,7 +52,6 @@ const ArenaMatching = () => {
                     // 서버로 Post 요청을 보내고 정상 매칭 성공시 Topic을 구독한 2명에게 UUID를 반환함
                     const { matchSessionId } = JSON.parse(message.body);
                     setMatchSessionId(matchSessionId);
-                    setResponseMessage(message.body);
                     // 반환한 UUID를 통해 다음 페이지로 navigate
                     handleMatchingSuccess();
                 });
@@ -70,15 +68,17 @@ const ArenaMatching = () => {
         try {
             const response = await matchingTest(randomId);
             console.log('POST 응답:', response);
-            setResponseMessage(response.data);
             startTimer(); // 타이머 시작
         } catch (error) {
             console.error('POST 요청 실패:', error);
-            setResponseMessage('요청 실패');
         }
     };
 
     // 매칭 성공 후 3초 후 페이지 이동
+    useEffect(() => {
+        if (matchSessionId) handleMatchingSuccess();
+    }, [matchSessionId]);
+
     const handleMatchingSuccess = () => {
         stopTimer();
         setIsMatched(true); // 모달 표시
@@ -90,7 +90,8 @@ const ArenaMatching = () => {
             if (count < 0) {
                 clearInterval(countdownInterval);
                 disconnectWebSocket(); // 웹소켓 연결 해제
-                navigate(`/next-page/${matchSessionId}`); // UUID와 함께 다음 페이지로 이동
+                console.log(matchSessionId, 'is session id');
+                navigate(`/arena/${matchSessionId}`); // UUID와 함께 다음 페이지로 이동
                 // 이 부분을 대결 컴포넌트로 바꿔야함
             }
         }, 1000);
