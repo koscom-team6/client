@@ -1,16 +1,28 @@
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import useAuthStore from '../../store/useAuthStore';
 import home_empty from '../../assets/sidebar/home_empty.png';
+import home_hover from '../../assets/sidebar/home_hover.png';
 import codesandbox_empty from '../../assets/sidebar/codesandbox_empty.png';
+import codesandbox_hover from '../../assets/sidebar/codesandbox_hover.png';
 import archive_empty from '../../assets/sidebar/archive_empty.png';
+import archive_hover from '../../assets/sidebar/archive_hover.png';
 import char_empty from '../../assets/sidebar/char_empty.png';
+import char_hover from '../../assets/sidebar/char_hover.png';
 import user_empty from '../../assets/sidebar/user_empty.png';
+import user_hover from '../../assets/sidebar/user_hover.png';
 import logout_empty from '../../assets/sidebar/logout_empty.png';
-import guest from '../../assets/sidebar/guest.png';
 import { useShallow } from 'zustand/shallow';
 import { getNextTierRestScore } from '../../libs/tier/tierHelper.js';
+import { useEffect, useState } from 'react';
 
 const SidebarLogin = () => {
+    const [currentPathname, setCurrentPathname] = useState(null);
+    const location = useLocation();
+
+    useEffect(() => {
+        setCurrentPathname(location.pathname);
+    }, [location]);
+
     const navigate = useNavigate();
     const { setLogout, nickname, score, tierImageSrc, profileSrc } = useAuthStore(
         useShallow((state) => ({
@@ -21,6 +33,77 @@ const SidebarLogin = () => {
             profileSrc: state.profileSrc,
         }))
     );
+
+    const menus = [
+        { title: '홈', focusSrc: home_hover, unfocusSrc: home_empty, link: '/', enable: true },
+        { title: '연습문제', focusSrc: archive_hover, unfocusSrc: archive_empty, link: '/practice', enable: false },
+        { title: '아레나', focusSrc: codesandbox_hover, unfocusSrc: codesandbox_empty, link: '/arena', enable: true },
+        { title: '랭크', focusSrc: char_hover, unfocusSrc: char_empty, link: '/ranking', enable: true },
+        { title: '마이페이지', focusSrc: user_hover, unfocusSrc: user_empty, link: '/my-page', enable: false },
+    ];
+
+    const navigateIfEnable = (enable, link) => {
+        if (enable) {
+            navigate(link);
+        } else {
+            alert('아직 오픈되지 않은 기능입니다');
+        }
+    };
+
+    const getCurrentMenu = (menu, index, currentPathname) => {
+        if (!currentPathname) return <></>;
+
+        // home 만 특별하게 처리
+        if (menu.link === '/') {
+            if (currentPathname === '/') {
+                return (
+                    <li
+                        key={index}
+                        className="flex items-center px-4 py-2 hover:bg-gray-100 rounded cursor-pointer"
+                        onClick={() => navigateIfEnable(menu.enable, menu.link)}
+                    >
+                        <img src={menu.focusSrc} alt="메뉴 아이콘" className="w-4 h-4 rounded-lg mr-2" />
+                        <span className="text-[#3B3B3B]">{menu.title}</span>
+                    </li>
+                );
+            } else {
+                return (
+                    <li
+                        key={index}
+                        className="flex items-center px-4 py-2 hover:bg-gray-100 rounded cursor-pointer"
+                        onClick={() => navigateIfEnable(menu.enable, menu.link)}
+                    >
+                        <img src={menu.unfocusSrc} alt="메뉴 아이콘" className="w-4 h-4 rounded-lg mr-2" />
+                        <span className="text-[#999999]">{menu.title}</span>
+                    </li>
+                );
+            }
+        }
+
+        if (currentPathname.startsWith(menu.link)) {
+            return (
+                <li
+                    key={index}
+                    className="flex items-center px-4 py-2 hover:bg-gray-100 rounded cursor-pointer"
+                    onClick={() => navigateIfEnable(menu.enable, menu.link)}
+                >
+                    <img src={menu.focusSrc} alt="메뉴 아이콘" className="w-4 h-4 rounded-lg mr-2" />
+                    <span className="text-[#3B3B3B]">{menu.title}</span>
+                </li>
+            );
+        }
+
+        return (
+            <li
+                key={index}
+                className="flex items-center px-4 py-2 hover:bg-gray-100 rounded cursor-pointer"
+                onClick={() => navigateIfEnable(menu.enable, menu.link)}
+            >
+                <img src={menu.unfocusSrc} alt="메뉴 아이콘" className="w-4 h-4 rounded-lg mr-2" />
+                <span className="text-[#999999]">{menu.title}</span>
+            </li>
+        );
+    };
 
     return (
         <div className="flex flex-col items-center p-4 h-full">
@@ -37,35 +120,7 @@ const SidebarLogin = () => {
 
             {/* 메뉴 섹션 */}
             <nav className="w-full">
-                <ul className="space-y-3">
-                    <li
-                        className="flex items-center px-4 py-2 hover:bg-gray-100 rounded cursor-pointer"
-                        onClick={() => navigate('/')}
-                    >
-                        <img src={home_empty} alt="홈 아이콘" className="w-4 h-4 rounded-lg mr-2" />
-                        <span className="text-[#3B3B3B]">홈</span>
-                    </li>
-                    <li className="flex items-center px-4 py-2 hover:bg-gray-100 rounded cursor-pointer">
-                        <img src={archive_empty} alt="연습문제 아이콘" className="w-4 h-4 rounded-lg mr-2" />
-                        <span className="text-[#999999]">연습문제</span>
-                    </li>
-                    <li
-                        className="flex items-center px-4 py-2 hover:bg-gray-100 rounded cursor-pointer"
-                        onClick={() => navigate('/arena')}
-                    >
-                        <img src={codesandbox_empty} alt="아레나 아이콘" className="w-4 h-4 rounded-lg mr-2" />
-                        <span className="text-[#999999]">아레나</span>
-                    </li>
-                    <li className="flex items-center px-4 py-2 hover:bg-gray-100 rounded cursor-pointer"
-                        onClick={()=>navigate('/ranking')}>
-                        <img src={char_empty} alt="랭크 아이콘" className="w-4 h-4 rounded-lg mr-2" />
-                        <span className="text-[#999999]">랭크</span>
-                    </li>
-                    <li className="flex items-center px-4 py-2 hover:bg-gray-100 rounded cursor-pointer">
-                        <img src={user_empty} alt="마이페이지 아이콘" className="w-4 h-4 rounded-lg mr-2" />
-                        <span className="text-[#999999]">마이페이지</span>
-                    </li>
-                </ul>
+                <ul className="space-y-3">{menus.map((e, i) => getCurrentMenu(e, i, currentPathname))}</ul>
             </nav>
 
             {/* 로그아웃 섹션 */}
