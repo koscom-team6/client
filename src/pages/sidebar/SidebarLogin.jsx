@@ -48,7 +48,7 @@ const SidebarLogin = () => {
             <img src={codesandbox_empty} alt="아레나 아이콘" className="w-4 h-4 rounded-lg mr-2" />
             <span className="text-[#999999]">아레나</span>
           </li>
-          <li className="flex items-center px-4 py-2 hover:bg-gray-100 rounded cursor-pointer">
+          <li className="flex items-center px-4 py-2 hover:bg-gray-100 rounded cursor-pointer" onClick={()=>navigate("/ranking")}>
             <img src={char_empty} alt="랭크 아이콘" className="w-4 h-4 rounded-lg mr-2" />
             <span className="text-[#999999]">랭크</span>
           </li>
