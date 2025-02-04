@@ -61,7 +61,7 @@ const ReferenceListItem = ({ referType, referText, referLink }) => {
     return (
         <li>
             <span className="inline-flex">
-                <p className="pr-2">{`${referType} :`}</p>
+                <p className="pr-2">{``}</p>
                 <a href={referLink} target="_blank" className="text-accent hover:text-[#8C00FE] visited:text-[#390067]">
                     {referText}
                 </a>
