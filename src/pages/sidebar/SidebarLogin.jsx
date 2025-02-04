@@ -39,7 +39,7 @@ const SidebarLogin = () => {
         { title: '연습문제', focusSrc: archive_hover, unfocusSrc: archive_empty, link: '/practice', enable: false },
         { title: '아레나', focusSrc: codesandbox_hover, unfocusSrc: codesandbox_empty, link: '/arena', enable: true },
         { title: '랭크', focusSrc: char_hover, unfocusSrc: char_empty, link: '/ranking', enable: true },
-        { title: '마이페이지', focusSrc: user_hover, unfocusSrc: user_empty, link: '/my-page', enable: false },
+        { title: '마이페이지', focusSrc: user_hover, unfocusSrc: user_empty, link: '/my-page', enable: true },
     ];
 
     const navigateIfEnable = (enable, link) => {

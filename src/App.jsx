@@ -9,6 +9,7 @@ import useAuthStore from './store/useAuthStore';
 import { useShallow } from 'zustand/shallow';
 import PrivateRoute from './PrivateRoute';
 import ArenaResultPopup from './pages/arena/ArenaResultPopup';
+import MyPage from './pages/mypage/MyPage';
 
 const App = () => {
     const { isAuthenticated } = useAuthStore(
@@ -47,6 +48,14 @@ const App = () => {
                         element={
                             <PrivateRoute>
                                 <RankingMain />
+                            </PrivateRoute>
+                        }
+                    />
+                    <Route
+                        path="my-page"
+                        element={
+                            <PrivateRoute>
+                                <MyPage />
                             </PrivateRoute>
                         }
                     />
