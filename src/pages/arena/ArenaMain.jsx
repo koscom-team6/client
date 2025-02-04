@@ -7,14 +7,14 @@ import AIGrading from '../../components/quiz/AIGrading';
 import ArenaResult from '../../components/quiz/ArenaResult';
 import { useParams } from 'react-router-dom';
 import { getArenaQuiz, sendMessageApi } from '../../libs/apis/arenaApi';
-import SockJS from 'sockjs-client'; // WebSocket 기반 통신용 SockJS
-import Stomp from 'stompjs'; // WebSocket 통신을 위한 Stomp 프로토콜
+import SockJS from 'sockjs-client';
+import Stomp from 'stompjs';
 import useAuthStore from '../../store/useAuthStore';
 import { useShallow } from 'zustand/shallow';
+import { matchingNews } from '../../libs/apis/matchingApi';
 
 const ArenaMain = () => {
     const { sid } = useParams();
-    const { quiz, setQuiz } = useState(null);
     const { token, nickname, updateUser } = useAuthStore(
         useShallow((state) => ({
             token: state.token,
@@ -23,40 +23,44 @@ const ArenaMain = () => {
         }))
     );
 
-    const title = '삼성 전자의 전망을 평가해라!';
-    const tags = ['국내주식', '투자'];
-    const images = [
-        'https://webchart.thinkpool.com/2022Mobile/Stock1Day/A005930.png',
-        'https://dimg.donga.com/wps/NEWS/IMAGE/2025/01/08/130814617.1.jpg',
-        'https://blog.kakaocdn.net/dn/bUnwZW/btrgvTEuJ0u/zXAc7VDKWakfo47mL8XAa0/img.jpg',
-        'https://image.fnnews.com/resource/media/image/2024/11/18/202411182338292936_l.jpg',
-    ];
-    const content =
-        '삼성전자는 2024년 하반기부터 메모리 반도체 수요 회복과 함께 AI 반도체 사업 확장을 통해 성장 가능성을 기대하고 있습니다. 하지만 글로벌 경기 둔화와 경쟁 심화로 인해 불확실성도 상존합니다. 이러한 상황에서 삼성전자의 주가에 영향을 미칠 주요 요인으로는 기술 혁신, 원자재 가격, 그리고 환율 변동 등이 있습니다. 삼성전자의 주가가 앞으로 상승할 가능성이 높다고 보는지, 혹은 하락할 가능성이 높다고 보는지, 그 이유를 사례를 들어 서술하세요.';
-    const references = [
-        {
-            referType: '뉴스',
-            referText: '"악재란 악재 다 반영됐다"… 삼성전자 주가 반등 기대감',
-            referLink: 'https://daisyui.com/',
-        },
-        {
-            referType: '뉴스',
-            referText: '계속 무너져 내려가는 삼성전자',
-            referLink: 'https://daisyui.com/',
-        },
-        {
-            referType: '차트',
-            referText: '삼성전자 차트 - 네이버페이 증권',
-            referLink: 'https://daisyui.com/',
-        },
-        {
-            referType: '재무제표',
-            referText: '삼성전자 재무제표 - 네이버페이 증권',
-            referLink: 'https://daisyui.com/',
-        },
-    ];
+    const [quizData, setQuizData] = useState({
+        title: '',
+        tags: [],
+        images: [],
+        content: '',
+        references: []
+    });
 
-    // 웹소켓
+    useEffect(() => {
+        console.log("first sid = ",sid);
+        const fetchQuizData = async () => {
+            try {
+                const response = await matchingNews(token, sid);
+                // const responseObject = JSON.parse(response);
+                console.log("fetch response = ",response);
+                console.log(response.matchId);
+                // console.log("test = ", responseObject);
+                setQuizData({
+                    title: response.matchTitle,
+                    content: response.matchContent,
+                    tags: response.tags || [],
+                    images: response.images || [],
+                    references: response.matchReferences || []
+                });
+    
+                
+            } catch (error) {
+                console.error("Error fetching quiz data:", error);
+            }
+        };
+        fetchQuizData();
+    }, [sid, token]);
+    useEffect(() => {
+        console.log("Updated quiz data:", quizData);
+    }, [quizData]);  // ✅ quizData가 변경될 때마다 실행
+    
+
+    // 웹소켓 관련 설정
     const stompClient = useRef(null);
     const [subchat, setSubChat] = useState(null);
 
@@ -84,7 +88,7 @@ const ArenaMain = () => {
             console.log('하이하이 소켓 센드해용');
             const message = {
                 matchSessionId: sid,
-                type: action, // typing, solved
+                type: action,
                 content: typingMessage,
                 token: token,
             };
@@ -126,7 +130,7 @@ const ArenaMain = () => {
         contentRef.current?.scrollIntoView({ block: 'end', behavior: 'smooth' });
     };
 
-    // null, inProgress, complete
+    // AI 채점 상태
     const [aiStatus, setAiStaus] = useState(null);
 
     useEffect(() => {
@@ -173,10 +177,11 @@ const ArenaMain = () => {
             scrollToBottom();
         }
     }, [subchat]);
+
     return (
         <div className="px-[8rem]" ref={contentRef}>
-            <QuizHeader title={title} tags={tags} count={180} />
-            <QuizContent content={content} images={images} references={references} />
+            <QuizHeader title={quizData.title} tags={quizData.tags} count={180} />
+            <QuizContent content={quizData.content} images={quizData.images} references={quizData.references} />
             {oppositeUser.type ? (
                 <div className="flex justify-end">
                     <QuizAvartar
@@ -208,14 +213,13 @@ const ArenaMain = () => {
                 <></>
             )}
             <ArenaResult
-                title={title}
+                title={quizData.title}
                 opponentProfile={oppositeUser.profile}
                 myResult={my.result}
                 opponentResult={oppositeUser.result}
                 myUser={my.user}
                 disconnect={disconnect}
             />
-            {/* 답변 영역 */}
             <div className="h-76 margin"></div>
             <div className="flex justify-center items-center bg-linear-to-t from-base-200 from-70% via-base-200/30 via-90% to-base-200/0 to-0% fixed bottom-0 w-full h-76"></div>
             <div className="flex justify-center items-center">
